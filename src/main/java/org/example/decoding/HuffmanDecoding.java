@@ -1,24 +1,22 @@
 package org.example.decoding;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 public class HuffmanDecoding {
 
-    public static byte[] huffmanDecode(byte[] encodedText, HashMap<String, String> codeTable, int encodedTextLength) throws IOException {
+    public static byte[] huffmanDecode(byte[] encodedText, HashMap<String, Byte> codeTable, int encodedTextLength) {
         ByteArrayOutputStream decodedStream = new ByteArrayOutputStream();
         StringBuilder currentCode = new StringBuilder();
         int bitCount = 0;
-
         for (byte encodedByte : encodedText) {
             for (int i = 7; i >= 0; i--) {
                 boolean bit = ((encodedByte >> i) & 1) == 1;
                 currentCode.append(bit ? '1' : '0');
                 bitCount++;
                 if (codeTable.containsKey(currentCode.toString())) {
-                    String decodedSymbol = codeTable.get(currentCode.toString());
-                    byte decodedByte = (byte) Integer.parseInt(decodedSymbol);
-                    decodedStream.write(decodedByte);
+                    decodedStream.write(codeTable.get(currentCode.toString()));
                     currentCode.setLength(0); // Reset the current code
                 }
 
@@ -33,14 +31,14 @@ public class HuffmanDecoding {
         return decodedStream.toByteArray();
     }
 
-    public static HashMap<String, String> deserializeCodeTable(String serializedCodes) {
-        HashMap<String, String> codes = new HashMap<>();
+    public static HashMap<String, Byte> deserializeCodeTable(String serializedCodes) {
+        HashMap<String, Byte> codes = new HashMap<>();
         String[] lines = serializedCodes.split("\n");
         for (String line : lines) {
             if (!line.isEmpty()) {
                 if (line.contains("\t")) {
                     String[] parts = line.split("\t");
-                    codes.put(parts[1], parts[0]);
+                    codes.put(parts[1], Byte.parseByte(parts[0]));
                 }
             }
         }
@@ -63,9 +61,7 @@ public class HuffmanDecoding {
                     String metadata = new String(metadataBytes, "UTF-8");
 
                     // Deserialize Huffman code table
-                    HashMap<String, String> codeTable = deserializeCodeTable(metadata);
-                    System.out.println("Code table: " + codeTable); // Print code table for debugging
-
+                    HashMap<String, Byte> codeTable = deserializeCodeTable(metadata);
                     // Read encoded text length
                     byte[] encodedTextLengthBytes = new byte[4];
                     inputStream.read(encodedTextLengthBytes);

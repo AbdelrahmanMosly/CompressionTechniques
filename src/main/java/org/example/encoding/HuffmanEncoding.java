@@ -1,3 +1,4 @@
+package org.example.encoding;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -85,10 +86,39 @@ public class HuffmanEncoding {
         }
         return serializedCodes.toString();
     }
+    public static byte[] convertBinaryStringToByteArray(StringBuilder binaryString) {
+        int length = binaryString.length();
+        int numOfBytes = (length + 7) / 8; // Calculate the number of bytes needed
+
+        // Pad the binary string on the right with '0' characters if needed
+        int paddingLength = numOfBytes * 8 - length;
+        for (int i = 0; i < paddingLength; i++) {
+            binaryString.append('0');
+        }
+
+        byte[] byteArray = new byte[numOfBytes];
+        int byteIndex = 0;
+        int bitIndex = 0;
+
+        // Convert each 8-bit substring into a byte
+        for (int i = 0; i < numOfBytes * 8; i++) {
+            char bit = binaryString.charAt(i);
+            if (bit == '1') {
+                byteArray[byteIndex] |= (1 << (7 - bitIndex)); // Set the bit to 1
+            }
+            bitIndex++;
+            if (bitIndex == 8) {
+                byteIndex++;
+                bitIndex = 0;
+            }
+        }
+
+        return byteArray;
+    }
+
 
     public static void main(String[] args) {
         String inputFileName = "input.txt";
-
         try (FileInputStream inputStream = new FileInputStream(inputFileName)) {
             byte[] text = inputStream.readAllBytes();
 
@@ -115,8 +145,7 @@ public class HuffmanEncoding {
                 outputStream.write(encodedTextLengthBytes);
                 System.out.println(encodedText.length());
                 // Write encoded text as bytes
-                String paddedEncodedText = String.format("%-" + ((encodedText.length() + 7) / 8 * 8) + "s", encodedText.toString()).replace(' ', '0');
-                byte[] encodedBytes = new BigInteger(paddedEncodedText, 2).toByteArray();
+                byte[] encodedBytes = convertBinaryStringToByteArray(encodedText);
                 outputStream.write(encodedBytes);
             } catch (IOException e) {
                 e.printStackTrace();
