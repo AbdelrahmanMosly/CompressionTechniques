@@ -17,12 +17,8 @@ public class HuffmanDecoding {
                 bitCount++;
                 if (codeTable.containsKey(currentCode.toString())) {
                     String decodedSymbol = codeTable.get(currentCode.toString());
-                    if (decodedSymbol.equals("<NEWLINE>")) {
-                        decodedStream.write('\n');
-                    } else {
-                        byte decodedByte = (byte) Integer.parseInt(decodedSymbol);
-                        decodedStream.write(decodedByte);
-                    }
+                    byte decodedByte = (byte) Integer.parseInt(decodedSymbol);
+                    decodedStream.write(decodedByte);
                     currentCode.setLength(0); // Reset the current code
                 }
 
@@ -45,8 +41,6 @@ public class HuffmanDecoding {
                 if (line.contains("\t")) {
                     String[] parts = line.split("\t");
                     codes.put(parts[1], parts[0]);
-                } else {
-                    codes.put(line.trim(), "<NEWLINE>");
                 }
             }
         }

@@ -81,17 +81,13 @@ public class HuffmanEncoding {
     public static String serializeCodeTable(HashMap<Byte, String> codes) {
         StringBuilder serializedCodes = new StringBuilder();
         for (byte character : codes.keySet()) {
-            if (character == '\n') {
-                serializedCodes.append("<NEWLINE>\t").append(codes.get(character)).append("\n");
-            } else {
-                serializedCodes.append(character).append("\t").append(codes.get(character)).append("\n");
-            }
+            serializedCodes.append(character).append("\t").append(codes.get(character)).append("\n");
         }
         return serializedCodes.toString();
     }
 
     public static void main(String[] args) {
-        String inputFileName = "DS-CH7-Consistency and Replication.pdf";
+        String inputFileName = "input.txt";
 
         try (FileInputStream inputStream = new FileInputStream(inputFileName)) {
             byte[] text = inputStream.readAllBytes();
@@ -117,7 +113,7 @@ public class HuffmanEncoding {
                 // Write encoded text length as 4-byte integer
                 byte[] encodedTextLengthBytes = ByteBuffer.allocate(4).putInt(encodedText.length()).array();
                 outputStream.write(encodedTextLengthBytes);
-
+                System.out.println(encodedText.length());
                 // Write encoded text as bytes
                 String paddedEncodedText = String.format("%-" + ((encodedText.length() + 7) / 8 * 8) + "s", encodedText.toString()).replace(' ', '0');
                 byte[] encodedBytes = new BigInteger(paddedEncodedText, 2).toByteArray();
