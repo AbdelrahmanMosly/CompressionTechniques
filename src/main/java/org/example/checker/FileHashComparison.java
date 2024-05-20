@@ -27,8 +27,26 @@ public class FileHashComparison {
         }
         return hexString.toString();
     }
+    public static double comparessionRatio(String inputFilePath, String outputFilePath) {
+        String encodedFilePath = inputFilePath + ".encoded";
+        double compressionRatio = 0;
+        try {
+            // Get the size of the input file
+            long inputFileSize = Files.size(Paths.get(inputFilePath));
 
-    public static void compare(String inputFilePath, String outputFilePath) {
+            // Get the size of the output file
+            long outputFileSize = Files.size(Paths.get(encodedFilePath));
+
+            // Calculate compression ratio
+            compressionRatio = (double) outputFileSize / inputFileSize;
+            System.out.println("Compression ratio: " + compressionRatio);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return compressionRatio;
+    }
+    public static void compareShA(String inputFilePath, String outputFilePath) {
         String encodedFilePath = inputFilePath+".encoded";
 
         try {
@@ -42,17 +60,6 @@ public class FileHashComparison {
             } else {
                 System.err.println("SHA256 of input does not match SHA256 of uncompressed");
             }
-
-            // Get the size of the input file
-            long inputFileSize = Files.size(Paths.get(inputFilePath));
-
-            // Get the size of the output file
-            long outputFileSize = Files.size(Paths.get(encodedFilePath));
-
-            // Calculate compression ratio
-            double compressionRatio = (double) outputFileSize / inputFileSize;
-
-            System.out.println("Compression ratio: " + compressionRatio);
         } catch (IOException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
