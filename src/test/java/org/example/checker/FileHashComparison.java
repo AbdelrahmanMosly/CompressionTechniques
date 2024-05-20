@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+import static org.junit.jupiter.api.Assertions.*;
 public class FileHashComparison {
 
     // Function to compute the SHA256 hash of a file
@@ -40,6 +40,8 @@ public class FileHashComparison {
             // Calculate compression ratio
             compressionRatio = (double) outputFileSize / inputFileSize;
             System.out.println("Compression ratio: " + compressionRatio);
+            System.out.println("input file size in bytes: " + inputFileSize);
+            System.out.println("encoded file size in bytes: " + compressionRatio);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,19 +49,13 @@ public class FileHashComparison {
         return compressionRatio;
     }
     public static void compareShA(String inputFilePath, String outputFilePath) {
-        String encodedFilePath = inputFilePath+".encoded";
-
         try {
             // Compute the SHA256 hashes of the input and output files
             String inputHash = sha256OfFile(inputFilePath);
             String outputHash = sha256OfFile(outputFilePath);
 
-            // Compare the hashes
-            if (inputHash.equals(outputHash)) {
-                System.out.println("SHA256 of input matches SHA256 of uncompressed");
-            } else {
-                System.err.println("SHA256 of input does not match SHA256 of uncompressed");
-            }
+            assertTrue(inputHash.equals(outputHash), "SHA256 hashes of the input and output files do not match");
+
         } catch (IOException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

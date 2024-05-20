@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import org.example.checker.FileHashComparison;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,6 +48,8 @@ public class HuffmanEncodingPerformanceTest {
         System.out.println("Encoding process time for multiplier " + multiplier + ": " + duration + " ms");
 
         assertTrue(Files.exists(Paths.get(encodedFileName)));
+
+         FileHashComparison.comparessionRatio(inputFileName, encodedFileName);
     }
 
     @Test

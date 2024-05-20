@@ -2,13 +2,12 @@ package org.example.decoding;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
+import org.example.checker.FileHashComparison;
 import org.example.encoding.HuffmanEncoding;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,36 +33,14 @@ public class HuffmanDecodingPerformanceTest {
         String encodedFileName = INPUT_FILE_PREFIX + multiplier + ".txt" + ENCODED_FILE_SUFFIX;
         String decodedFileName = INPUT_FILE_PREFIX + multiplier + DECODED_FILE_SUFFIX;
 
-        try (FileInputStream inputStream = new FileInputStream(encodedFileName)) {
-            byte[] metadataLengthBytes = new byte[4];
-            inputStream.read(metadataLengthBytes);
-            int metadataLength = ByteBuffer.wrap(metadataLengthBytes).getInt();
+        // Decode the file
+        HuffmanDecoding.main(new String[]{encodedFileName});
 
-            byte[] metadataBytes = new byte[metadataLength];
-            inputStream.read(metadataBytes);
-            String metadata = new String(metadataBytes, "UTF-8");
-
-            HashMap<String, Byte> codeTable = HuffmanDecoding.deserializeCodeTable(metadata);
-            byte[] encodedTextLengthBytes = new byte[4];
-            inputStream.read(encodedTextLengthBytes);
-            int encodedTextLength = ByteBuffer.wrap(encodedTextLengthBytes).getInt();
-
-            byte[] encodedText = new byte[inputStream.available()];
-            inputStream.read(encodedText);
-
-            long startTime = System.nanoTime();
-            byte[] decodedText = HuffmanDecoding.huffmanDecode(encodedText, codeTable, encodedTextLength);
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime) / 1_000_000; // Convert to milliseconds
-            System.out.println("Decoding process time for multiplier " + multiplier + ": " + duration + " ms");
-
-            assertNotNull(decodedText);
-            assertTrue(decodedText.length > 0);
-
-            Files.write(Paths.get(decodedFileName), decodedText);
-        }
-
+        // Check if the decoded file was created
         assertTrue(Files.exists(Paths.get(decodedFileName)));
+
+        // Compare SHA256 hashes
+        FileHashComparison.compareShA(INPUT_FILE_PREFIX + multiplier + ".txt", decodedFileName);
     }
 
     @Test
