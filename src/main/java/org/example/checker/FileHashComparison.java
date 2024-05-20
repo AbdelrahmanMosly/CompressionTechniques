@@ -28,9 +28,7 @@ public class FileHashComparison {
         return hexString.toString();
     }
 
-    public static void main(String[] args) {
-        String inputFilePath = "input.txt";
-        String outputFilePath = "input_uncompressed.txt";
+    public static void compare(String inputFilePath, String outputFilePath) {
         String encodedFilePath = inputFilePath+".encoded";
 
         try {
@@ -42,7 +40,7 @@ public class FileHashComparison {
             if (inputHash.equals(outputHash)) {
                 System.out.println("SHA256 of input matches SHA256 of uncompressed");
             } else {
-                System.out.println("SHA256 of input does not match SHA256 of uncompressed");
+                System.err.println("SHA256 of input does not match SHA256 of uncompressed");
             }
 
             // Get the size of the input file
