@@ -118,7 +118,11 @@ public class HuffmanEncoding {
 
 
     public static void main(String[] args) {
-        String inputFileName = "input.txt";
+        if (args.length != 1) {
+            System.out.println("Usage: java HuffmanEncoding <input file>");
+            return;
+        }
+        String inputFileName = args[0];
         try (FileInputStream inputStream = new FileInputStream(inputFileName)) {
             byte[] text = inputStream.readAllBytes();
 
