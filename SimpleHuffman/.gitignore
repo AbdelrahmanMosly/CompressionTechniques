@@ -39,16 +39,12 @@ build/
 .idea/encodings.xml
 .idea/misc.xml
 /.idea
-*.xml
-*.xml
-*.xml
 *.pdf
 *.encoded
 *.txt
 /.idea/**
 /.idea
 /.idea
-pom.xml
 .idea/encodings.xml
 Screenshot 2024-05-17 125734_uncompressed.png
 *.png

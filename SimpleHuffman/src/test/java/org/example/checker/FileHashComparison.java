@@ -41,7 +41,7 @@ public class FileHashComparison {
             compressionRatio = (double) outputFileSize / inputFileSize;
             System.out.println("Compression ratio: " + compressionRatio);
             System.out.println("input file size in bytes: " + inputFileSize);
-            System.out.println("encoded file size in bytes: " + compressionRatio);
+            System.out.println("encoded file size in bytes: " + outputFileSize);
 
         } catch (IOException e) {
             e.printStackTrace();
